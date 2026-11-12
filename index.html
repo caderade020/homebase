@@ -25,7 +25,15 @@ button { font-family: inherit; -webkit-appearance: none; }
 .flexrow { display: -webkit-flex; display: flex; }
 
 /* Time across the top */
-.top { -webkit-flex: none; flex: none; -webkit-align-items: center; align-items: center; -webkit-justify-content: space-between; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid #22304a; }
+.top { -webkit-flex: none; flex: none; -webkit-align-items: center; align-items: center; -webkit-justify-content: space-between; justify-content: space-between; }
+/* Sky blue band across the top, edge to edge (extra margin covers the burn-in shift) */
+.top { margin: -22px -30px 0; padding: 22px 30px 14px; color: #fff;
+  background: #3b80c4;
+  background: -webkit-linear-gradient(290deg, #1d5aa2 0%, #3b80c4 55%, #78aedb 100%);
+  background: linear-gradient(160deg, #1d5aa2 0%, #3b80c4 55%, #78aedb 100%); }
+.top, .top * { text-shadow: 0 1px 2px rgba(0,0,0,.18); }
+.top .side .sec, .top .date .d2, .top .wx-sub { color: rgba(255,255,255,.82); }
+.top .wx-icon { color: #fff; }
 .clock { -webkit-align-items: flex-start; align-items: flex-start; line-height: .9; }
 .hm { font-size: 104px; font-weight: 100; letter-spacing: -3px; }
 .side { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; margin: 10px 0 0 8px; font-size: 22px; font-weight: 300; }
@@ -33,6 +41,44 @@ button { font-family: inherit; -webkit-appearance: none; }
 .date { text-align: right; }
 .date .d1 { font-size: 30px; font-weight: 300; }
 .date .d2 { font-size: 18px; color: #7e8ba0; margin-top: 4px; }
+
+/* Weather in the top bar */
+.wx { -webkit-align-items: center; align-items: center; min-width: 0; padding: 0 18px; }
+.wx-icon { width: 58px; height: 58px; -webkit-flex: none; flex: none; color: #e9eef5; }
+.wx-icon svg { width: 58px; height: 58px; }
+.wx-temp { font-size: 58px; font-weight: 200; margin: 0 14px 0 8px; letter-spacing: -1px; }
+.wx-text { min-width: 0; }
+.wx-cond { font-size: 20px; font-weight: 500; white-space: nowrap; }
+.wx-sub { font-size: 15px; color: #7e8ba0; margin-top: 3px; white-space: nowrap; }
+.findbtn { margin-left: 8px; font-size: 16px; padding: 0 16px; border-radius: 8px; border: 1px solid #2b3a55; background: #121c2f; color: #e9eef5; }
+#cityRes button { display: block; width: 100%; text-align: left; margin-top: 6px; font-size: 16px; padding: 10px 12px; border-radius: 8px; border: 1px solid #2b3a55; background: #121c2f; color: #e9eef5; }
+
+/* "Not updating" indicator under the date */
+.health { display: inline-block; margin-top: 6px; background: rgba(0,0,0,.28); color: #ffd27a; font-size: 14px; font-weight: 700; padding: 3px 10px; border-radius: 10px; text-shadow: none; }
+
+/* Severe weather banner */
+.alert { -webkit-flex: none; flex: none; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; margin: 0 -30px; padding: 10px 30px; color: #fff; font-size: 17px; }
+.alert.severe { background: #b3261e; }
+.alert.moderate { background: #b45309; }
+.alert.minor { background: #6b5b16; }
+.alert strong { font-size: 19px; font-weight: 700; margin-right: 14px; white-space: nowrap; }
+.alert .adv { -webkit-flex: 1 1 auto; flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; opacity: .95; }
+.alert .cnt { font-size: 13px; opacity: .85; margin-left: 12px; white-space: nowrap; }
+
+/* Aggies game-day spotlight */
+#spot { -webkit-flex: none; flex: none; margin-bottom: 8px; }
+.spot { background: #15223a; border: 1px solid #2b3a55; border-radius: 12px; padding: 10px 14px 10px; }
+.spot.flash { -webkit-animation: spflash 1s ease-in-out 4; animation: spflash 1s ease-in-out 4; }
+@-webkit-keyframes spflash { 50% { background: #3a3418; border-color: #ffd34d; } }
+@keyframes spflash { 50% { background: #3a3418; border-color: #ffd34d; } }
+.sp-head { -webkit-justify-content: space-between; justify-content: space-between; font-size: 13px; font-weight: 700; letter-spacing: .6px; color: #9fb0c6; text-transform: uppercase; margin-bottom: 4px; }
+.sp-live { color: #ff7a5c; }
+.sp-team { -webkit-align-items: center; align-items: center; height: 46px; }
+.sp-team .logo, .sp-team .badge { width: 36px; height: 36px; line-height: 36px; border-radius: 18px; font-size: 11px; margin-right: 12px; }
+.sp-team .nm { font-size: 24px; font-weight: 500; }
+.sp-team .pts { font-size: 40px; font-weight: 300; min-width: 54px; }
+.sp-team.lose { color: #6f7c90; }
+.sp-info { font-size: 17px; font-weight: 700; margin-top: 4px; color: #e9eef5; }
 
 /* Two panels below */
 .main { -webkit-flex: 1 1 auto; flex: 1 1 auto; min-height: 0; overflow: hidden; padding-top: 14px; }
@@ -64,6 +110,58 @@ button { font-family: inherit; -webkit-appearance: none; }
 .status .ch { display: block; font-size: 12px; color: #6f7c90; font-weight: 400; margin-top: 3px; }
 .empty { color: #7e8ba0; font-size: 18px; padding: 16px 0; }
 
+/* Score bugs: logo, score / score, logo, with an info strip underneath */
+.bug { border: 1px solid #22304a; border-radius: 10px; overflow: hidden; margin: 0 0 8px; background: #0f182a; }
+.bug.fav { border-color: #3b5a8c; background: #15223a; }
+.bug.is-live { border-color: #6a2e26; }
+.bug-main { -webkit-align-items: stretch; align-items: stretch; height: 48px; padding: 0; }
+.bs { -webkit-flex: 1 1 0; flex: 1 1 0; min-width: 0; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; padding: 0 12px; background: #1b2740; color: #fff; }
+.bs.dark-text { color: #111a26; }
+.bs .lwrap { width: 32px; height: 32px; border-radius: 16px; background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.15); -webkit-flex: none; flex: none; display: -webkit-flex; display: flex; -webkit-align-items: center; -webkit-justify-content: center; align-items: center; justify-content: center; margin-right: 10px; overflow: hidden; }
+.bs.r .lwrap { margin: 0 0 0 10px; }
+.bs .lwrap .logo { width: 26px; height: 26px; margin: 0; border-radius: 0; }
+.bs .lwrap .badge { width: 32px; height: 32px; margin: 0; background: transparent; color: #111a26; }
+.bs.r { -webkit-flex-direction: row-reverse; flex-direction: row-reverse; }
+.bs .logo, .bs .badge { width: 32px; height: 32px; line-height: 32px; border-radius: 16px; margin: 0 10px 0 0; }
+.bs.r .logo, .bs.r .badge { margin: 0 0 0 10px; }
+.bs .ab { font-size: 18px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bs.lose { opacity: .5; }
+.bs .poss { font-size: 11px; margin: 0 5px; vertical-align: 3px; }
+.bs .rank { color: inherit; opacity: .75; }
+.bug-score { -webkit-flex: none; flex: none; font-size: 30px; font-weight: 300; padding: 0 14px; white-space: nowrap; background: #0f182a; line-height: 48px; }
+.bug-score .sl { color: #4f5d74; margin: 0 8px; }
+.bug-score .w { font-weight: 600; }
+.bug-score .vs { font-size: 20px; color: #7e8ba0; }
+.bug-strip { background: #121c2f; padding: 4px 12px; font-size: 14px; color: #9fb0c6; height: 18px; line-height: 18px; }
+.bug-strip span { -webkit-flex: 1 1 0; flex: 1 1 0; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bug-strip span:nth-child(2) { text-align: center; }
+.bug-strip span:nth-child(3) { text-align: right; }
+.bug-strip .lv { color: #ff7a5c; font-weight: 700; }
+.bug-strip .til { color: #e9eef5; font-weight: 700; }
+.bug.big { margin: 0; }
+.bug.big .bug-main { height: 64px; }
+.bug.big .bug-score { line-height: 64px; }
+.bug.big .bs .lwrap { width: 46px; height: 46px; border-radius: 23px; }
+.bug.big .bs .lwrap .logo { width: 36px; height: 36px; }
+.bug.big .bs .lwrap .badge { width: 46px; height: 46px; line-height: 46px; }
+.bug.big .bs .ab { font-size: 22px; }
+.bug.big .bug-score { font-size: 42px; }
+.bug.big .bug-strip { font-size: 16px; height: 22px; line-height: 22px; padding: 5px 14px; }
+.spot { padding: 8px 10px 10px; }
+
+/* Team colors fade into the middle of each score bug */
+.bug-main { background-color: #0f182a; }
+.bs { background: transparent; }
+.bug-score { background: transparent; text-shadow: 0 1px 3px rgba(0,0,0,.6); }
+.bs .ab { text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+.bs.dark-text .ab { text-shadow: none; }
+
+/* My teams spotlight */
+.sp-cap { -webkit-justify-content: space-between; justify-content: space-between; -webkit-align-items: baseline; align-items: baseline; margin-bottom: 6px; }
+.sp-team-name { font-size: 16px; font-weight: 700; color: #e9eef5; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sp-kind { font-size: 13px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: #9fb0c6; white-space: nowrap; margin-left: 10px; }
+.sp-cap .sp-live { font-size: 13px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; white-space: nowrap; margin-left: 10px; }
+
 /* Stocks */
 .quote { -webkit-flex: none; flex: none; -webkit-align-items: baseline; align-items: baseline; }
 .price { font-size: 40px; font-weight: 200; letter-spacing: -1px; }
@@ -78,6 +176,9 @@ button { font-family: inherit; -webkit-appearance: none; }
 .tk .s small { font-weight: 400; color: #7e8ba0; font-size: 13px; margin-left: 6px; }
 .tk .p { width: 100px; text-align: right; }
 .tk .c { width: 90px; text-align: right; font-weight: 700; font-size: 16px; }
+.tk { padding-left: 8px; padding-right: 8px; }
+.tk.cur { background: #15223a; border-radius: 8px; border-top-color: transparent; }
+.tk.cur + .tk { border-top-color: transparent; }
 .foot { -webkit-flex: none; flex: none; font-size: 12px; color: #4f5d74; padding-top: 4px; }
 
 .gear { position: absolute; right: 10px; bottom: 8px; width: 44px; height: 44px; border: 0; background: transparent; color: #33415a; font-size: 26px; line-height: 44px; padding: 0; }
@@ -106,6 +207,12 @@ button { font-family: inherit; -webkit-appearance: none; }
   .scores { padding: 0 0 14px; border-right: 0; border-bottom: 1px solid #22304a; }
   .stocks { padding: 14px 0 0; }
   .hm { font-size: 96px; }
+  .top { -webkit-flex-wrap: wrap; flex-wrap: wrap; }
+  .wx { -webkit-order: 3; order: 3; width: 100%; padding: 12px 0 0; }
+}
+@media (orientation: landscape) and (max-width: 1100px) {
+  .hm { font-size: 92px; }
+  .date .d1 { font-size: 24px; }
 }
 </style>
 </head>
@@ -113,10 +220,21 @@ button { font-family: inherit; -webkit-appearance: none; }
 <div class="app" id="app">
   <header class="top flexrow">
     <div class="clock flexrow"><span class="hm" id="hm">--:--</span><span class="side"><span id="ampm"></span><span class="sec" id="sec"></span></span></div>
-    <div class="date"><div class="d1" id="d1"></div><div class="d2" id="d2"></div></div>
+    <div class="wx flexrow" id="wx">
+      <div class="wx-icon" id="wxIcon" aria-hidden="true"></div>
+      <div class="wx-temp" id="wxTemp">--°</div>
+      <div class="wx-text">
+        <div class="wx-cond" id="wxCond">Loading weather…</div>
+        <div class="wx-sub" id="wxSub"></div>
+        <div class="wx-sub" id="wxTom"></div>
+      </div>
+    </div>
+    <div class="date"><div class="d1" id="d1"></div><div class="d2" id="d2"></div><div class="health" id="health" style="display:none"></div></div>
   </header>
+  <div class="alert" id="alert" role="alert" style="display:none"></div>
   <div class="main flexrow">
     <section class="panel scores">
+      <div id="spot" style="display:none"></div>
       <div class="ph flexrow">
         <div><h2 id="secTitle">Scores</h2></div>
         <div class="pager flexrow">
@@ -153,6 +271,10 @@ button { font-family: inherit; -webkit-appearance: none; }
     <label class="f" for="inTk">Stock tickers</label>
     <input type="text" id="inTk" autocapitalize="characters" autocorrect="off" spellcheck="false">
     <div class="hint">Separated by commas. The first one gets the chart.</div>
+    <label class="f" for="inCity">Weather location</label>
+    <div class="hint" id="curPlace"></div>
+    <div class="flexrow"><input type="text" id="inCity" placeholder="City name" autocorrect="off" style="-webkit-flex:1;flex:1"><button class="findbtn" id="findCity">Find</button></div>
+    <div id="cityRes"></div>
     <label class="f">Leagues</label>
     <div class="checks" id="inLeagues"></div>
     <div class="flexrow two">
@@ -178,7 +300,9 @@ button { font-family: inherit; -webkit-appearance: none; }
     finnhubKey: "",
     twelveDataKey: "",
     nightStart: "22:00",
-    nightEnd: "06:30"
+    nightEnd: "06:30",
+    // Weather location (change it here or with the gear on the iPad)
+    place: { name: "Scenic Oaks, Texas", lat: 29.7105, lon: -98.6667 }
   };
   /* ========================================================== */
 
@@ -259,7 +383,8 @@ button { font-family: inherit; -webkit-appearance: none; }
     finnhubKey: pick("fh") || SV.finnhubKey || CONFIG.finnhubKey,
     twelveDataKey: pick("td") || SV.twelveDataKey || CONFIG.twelveDataKey,
     nightStart: pick("ns") || SV.nightStart || CONFIG.nightStart,
-    nightEnd: pick("ne") || SV.nightEnd || CONFIG.nightEnd
+    nightEnd: pick("ne") || SV.nightEnd || CONFIG.nightEnd,
+    place: (P.pl && P.plat && P.plon) ? { name: P.pl, lat: +P.plat, lon: +P.plon } : (SV.place || CONFIG.place)
   };
 
   /* ---------- Clock ---------- */
@@ -274,8 +399,31 @@ button { font-family: inherit; -webkit-appearance: none; }
     setTimeout(tick, 1000 - d.getMilliseconds() + 5);
   }
 
+  /* ---------- "Not updating" indicator ---------- */
+  var lastOk = { scores: 0, weather: 0, stocks: 0 }, startedAt = Date.now();
+  function markOk(k) { lastOk[k] = Date.now(); renderHealth(); }
+  function renderHealth() {
+    var box = $("health"), now = Date.now(), msg = "";
+    var names = { scores: "Scores", weather: "Weather", stocks: "Stocks" };
+    if (navigator.onLine === false) msg = "Offline";
+    else {
+      var limits = { scores: 5 * 60000, weather: 50 * 60000, stocks: (marketOpen() ? 6 : 35) * 60000 }, stale = [], oldest = now;
+      for (var k in limits) {
+        if (!limits.hasOwnProperty(k) || (k === "stocks" && !cfg.finnhubKey)) continue;
+        var age = lastOk[k] ? now - lastOk[k] : now - startedAt;
+        if (age > limits[k]) { stale.push(k); if (lastOk[k] && lastOk[k] < oldest) oldest = lastOk[k]; }
+      }
+      if (stale.length) msg = (stale.length > 1 ? "Not updating" : names[stale[0]] + " not updating") + (oldest < now ? " since " + fmtTime(new Date(oldest)) : "");
+    }
+    box.textContent = msg ? "\u25CF " + msg : "";
+    box.style.display = msg ? "" : "none";
+  }
+  window.addEventListener("online", renderHealth);
+  window.addEventListener("offline", renderHealth);
+
   /* ================= SCORES ================= */
   var boards = {};      // league -> games from the scoreboard
+  var spotBoards = {};  // league -> every game (all conferences) when a favorite plays soon
   var favSched = {};    // "league:id" -> {name, league, events}
   var scoreErr = false;
 
@@ -292,15 +440,46 @@ button { font-family: inherit; -webkit-appearance: none; }
         id: String(t.id || ""), abbr: String(t.abbreviation || "").toUpperCase(),
         name: t.shortDisplayName || t.displayName || t.name || "TBD",
         logo: t.logo || (t.logos && t.logos[0] && t.logos[0].href) || "",
-        score: score(x.score), winner: !!x.winner, rank: r && r < 99 ? r : null
+        score: score(x.score), winner: !!x.winner, rank: r && r < 99 ? r : null,
+        color: t.color || "", alt: t.alternateColor || ""
       };
     }
     var ch = "";
     if (c.broadcasts && c.broadcasts[0]) ch = (c.broadcasts[0].names && c.broadcasts[0].names[0]) || (c.broadcasts[0].media && c.broadcasts[0].media.shortName) || "";
-    return { id: ev.id, league: lg, date: parseISO(ev.date), state: st.state || "pre", detail: st.shortDetail || st.detail || "", home: team(home), away: team(away), channel: ch };
+    var sit = c.situation || {};
+    return { id: ev.id, league: lg, date: parseISO(ev.date), state: st.state || "pre", detail: st.shortDetail || st.detail || "", home: team(home), away: team(away), channel: ch,
+      sit: { poss: String(sit.possession || ""), homeTO: sit.homeTimeouts, awayTO: sit.awayTimeouts } };
   }
 
+  function spotLeagues() {
+    var out = [], now = Date.now();
+    for (var i = 0; i < cfg.favorites.length; i++) {
+      var fs = favSched[cfg.favorites[i]];
+      if (!fs) continue;
+      for (var k = 0; k < fs.events.length; k++) {
+        var e = fs.events[k];
+        if ((e.state === "in" || Math.abs(e.date - now) < 14 * 3600000) && out.indexOf(fs.league) < 0) out.push(fs.league);
+      }
+    }
+    return out;
+  }
+  function boardMap(lg) {
+    var m = {}, lists = [spotBoards[lg] || [], boards[lg] || []];
+    for (var a = 0; a < lists.length; a++) for (var i = 0; i < lists[a].length; i++) m[lists[a][i].id] = lists[a][i];
+    return m;
+  }
+  function loadSpotBoards() {
+    var lgs = spotLeagues(), groups = { cfb: "80", ncaab: "50" };
+    for (var i = 0; i < lgs.length; i++) (function (lg) {
+      getJSON("https://site.api.espn.com/apis/site/v2/sports/" + LEAGUES[lg][1] + "/scoreboard?limit=300" + (groups[lg] ? "&groups=" + groups[lg] : ""), function (j) {
+        var list = [], evs = j.events || [];
+        for (var k = 0; k < evs.length; k++) list.push(parseEvent(evs[k], lg));
+        spotBoards[lg] = list; renderScores();
+      }, function () {});
+    })(lgs[i]);
+  }
   function loadBoards() {
+    loadSpotBoards();
     var lgs = cfg.leagues, left = lgs.length, anyOk = false;
     if (!left) { renderScores(); return; }
     for (var i = 0; i < lgs.length; i++) (function (lg) {
@@ -312,7 +491,7 @@ button { font-family: inherit; -webkit-appearance: none; }
         if (--left === 0) finish();
       }, function () { if (--left === 0) finish(); });
     })(lgs[i]);
-    function finish() { scoreErr = !anyOk; renderScores(); }
+    function finish() { scoreErr = !anyOk; if (anyOk) markOk("scores"); renderScores(); }
   }
 
   function loadFavorites() {
@@ -379,29 +558,102 @@ button { font-family: inherit; -webkit-appearance: none; }
     return wrap;
   }
 
-  // Sections the scores box cycles through: My teams, then each league with games.
-  function buildSections() {
-    var out = [], mine = [], i, k;
-    for (i = 0; i < cfg.favorites.length; i++) {
-      var fs = favSched[cfg.favorites[i]];
-      if (!fs) continue;
-      var board = {}, bl = boards[fs.league] || [];
-      for (k = 0; k < bl.length; k++) board[bl[k].id] = bl[k];
-      var evs = [];
-      for (k = 0; k < fs.events.length; k++) evs.push(board[fs.events[k].id] || fs.events[k]);
-      evs.sort(function (a, b) { return a.date - b.date; });
-      var live = null, last = null, next = null;
-      for (k = 0; k < evs.length; k++) {
-        if (evs[k].state === "in") live = evs[k];
-        else if (evs[k].state === "post") last = evs[k];
-        else if (!next && evs[k].state === "pre") next = evs[k];
-      }
-      var label = fs.name + ", " + LEAGUES[fs.league][0];
-      if (live) mine.push({ g: live, cap: label + " (live)" });
-      if (last) mine.push({ g: last, cap: label + " (last game, " + SMONTHS[new Date(last.date).getMonth()] + " " + new Date(last.date).getDate() + ")" });
-      if (next) mine.push({ g: next, cap: label + " (next game)" });
+  function dateText(t) {
+    var d = new Date(t), now = new Date(), tm = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    if (sameDay(d, now)) return "Today";
+    if (sameDay(d, tm)) return "Tomorrow";
+    return SDAYS[d.getDay()] + ", " + SMONTHS[d.getMonth()] + " " + d.getDate();
+  }
+  function relText(t) {
+    var ms = t - Date.now();
+    if (ms <= 60000) return "starting soon";
+    var d = new Date(t), now = new Date();
+    var days = Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 864e5);
+    if (days >= 2) return "in " + days + " days";
+    return "in " + untilText(ms);
+  }
+  function dots(n) {
+    if (n == null || n < 0) return "";
+    var s = ""; for (var i = 0; i < 3; i++) s += i < n ? "\u25CF" : "\u25CB";
+    return s;
+  }
+  function hexOk(h) { return /^[0-9a-f]{6}$/i.test(h || ""); }
+  function rgb(h) { return [parseInt(h.substr(0, 2), 16), parseInt(h.substr(2, 2), 16), parseInt(h.substr(4, 2), 16)]; }
+  function light(h) { var c = rgb(h); return (0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]) / 255 > 0.62; }
+  function near(a, b) { var x = rgb(a), y = rgb(b); return Math.abs(x[0] - y[0]) + Math.abs(x[1] - y[1]) + Math.abs(x[2] - y[2]) < 90; }
+  // Each side uses the team's main color, or its second color if the main one is nearly
+  // white, or (for the home team) too close to the away team's color.
+  function baseColor(t) {
+    var c = hexOk(t.color) ? t.color : "";
+    if (c && /^f{6}$/i.test(c) && hexOk(t.alt)) c = t.alt;
+    return c;
+  }
+  function sideColor(t, g, right) {
+    var col = baseColor(t);
+    if (right) { var oc = baseColor(g.away); if (col && oc && near(col, oc) && hexOk(t.alt)) col = t.alt; }
+    return col;
+  }
+  // Both team colors fade toward the middle of the score bug, where the score sits.
+  function bugFade(node, g) {
+    var a = sideColor(g.away, g, false) || "1b2740", h = sideColor(g.home, g, true) || "1b2740";
+    var ra = rgb(a).join(","), rh = rgb(h).join(",");
+    var stops = "rgb(" + ra + ") 0%, rgb(" + ra + ") 24%, rgba(" + ra + ",0) 50%, rgba(" + rh + ",0) 50%, rgb(" + rh + ") 76%, rgb(" + rh + ") 100%)";
+    node.style.backgroundImage = "-webkit-linear-gradient(left, " + stops;
+    node.style.backgroundImage = "linear-gradient(to right, " + stops;
+  }
+  function bugSide(t, g, right) {
+    var side = el("div", "bs" + (right ? " r" : "") + (g.state === "post" && !t.winner && g.home.score !== g.away.score ? " lose" : ""));
+    var col = sideColor(t, g, right);
+    if (col && light(col)) side.className += " dark-text";
+    var lw = el("div", "lwrap");
+    lw.appendChild(logoNode(t));
+    side.appendChild(lw);
+    var ab = el("div", "ab");
+    if (t.rank) ab.appendChild(el("span", "rank", String(t.rank)));
+    ab.appendChild(document.createTextNode(t.abbr || t.name));
+    if (g.state === "in" && g.sit && g.sit.poss && g.sit.poss === t.id) ab.appendChild(el("span", "poss", "\u25CF"));
+    side.appendChild(ab);
+    return side;
+  }
+  // One score bug: [logo] score / score [logo], and an info strip under it.
+  function bugNode(g, caption, big) {
+    var wrap = el("div");
+    if (caption) wrap.appendChild(el("div", "cap", caption));
+    var bug = el("div", "bug" + (big ? " big" : "") + (!caption && !big && isFav(g) ? " fav" : "") + (g.state === "in" ? " is-live" : ""));
+    var main = el("div", "bug-main flexrow");
+    bugFade(main, g);
+    main.appendChild(bugSide(g.away, g, false));
+    var mid = el("div", "bug-score");
+    if (g.state === "pre") mid.appendChild(el("span", "vs", "@"));
+    else {
+      mid.appendChild(el("span", g.state === "post" && g.away.winner ? "w" : null, String(g.away.score)));
+      mid.appendChild(el("span", "sl", "/"));
+      mid.appendChild(el("span", g.state === "post" && g.home.winner ? "w" : null, String(g.home.score)));
     }
-    if (mine.length) out.push({ title: "My teams", items: mine });
+    main.appendChild(mid);
+    main.appendChild(bugSide(g.home, g, true));
+    bug.appendChild(main);
+    var strip = el("div", "bug-strip flexrow"), L, C, R;
+    if (g.state === "in") {
+      var to = g.sit && (g.sit.awayTO != null || g.sit.homeTO != null) ? "TOs " + dots(g.sit.awayTO) + " | " + dots(g.sit.homeTO) : "";
+      L = el("span", "lv", g.detail); C = el("span", null, to); R = el("span", null, g.channel || "");
+    } else if (g.state === "pre") {
+      L = el("span", null, dateText(g.date));
+      C = el("span", null, fmtTime(new Date(g.date)) + (g.channel ? ", " + g.channel : ""));
+      R = el("span", "til", (big ? startVerb(g.league) + " " : "") + relText(g.date));
+    } else {
+      L = el("span", null, g.detail || "Final"); C = el("span", null, dateText(g.date)); R = el("span", null, "");
+    }
+    strip.appendChild(L); strip.appendChild(C); strip.appendChild(R);
+    bug.appendChild(strip);
+    wrap.appendChild(bug);
+    return wrap;
+  }
+
+  // Sections the scores box cycles through: My teams, then each league with games.
+  // Leagues that rotate under the My teams spotlight.
+  function buildSections() {
+    var out = [], i, k;
     for (i = 0; i < cfg.leagues.length; i++) {
       var lg = cfg.leagues[i], games = (boards[lg] || []).slice().sort(sortGames);
       if (!games.length || !LEAGUES[lg]) continue;
@@ -412,7 +664,91 @@ button { font-family: inherit; -webkit-appearance: none; }
     return out;
   }
 
-  var sections = [], secIdx = 0, pageIdx = 0, perPage = 3, pausedUntil = 0;
+  var sections = [], secIdx = 0, pageIdx = 0, perPage = 3, pausedUntil = 0, moved = false;
+  var lastSpotScore = {};
+  function untilText(ms) {
+    if (ms <= 60000) return "a minute";
+    var m = Math.round(ms / 60000), h = Math.floor(m / 60);
+    return h ? h + "h " + (m % 60) + "m" : m + " min";
+  }
+  function startVerb(lg) {
+    var p = LEAGUES[lg][1];
+    return p.indexOf("football") === 0 ? "Kickoff" : p.indexOf("basketball") === 0 ? "Tip-off" : p.indexOf("baseball") === 0 ? "First pitch" : "Starts";
+  }
+  // One game per favorite team: live, else one that just ended, else the next one this week, else the last one.
+  var spotIdx = 0;
+  function spotItems() {
+    var now = Date.now(), out = [], i, k;
+    for (i = 0; i < cfg.favorites.length; i++) {
+      var fs = favSched[cfg.favorites[i]];
+      if (!fs) continue;
+      var board = boardMap(fs.league), evs = [];
+      for (k = 0; k < fs.events.length; k++) evs.push(board[fs.events[k].id] || fs.events[k]);
+      evs.sort(function (a, b) { return a.date - b.date; });
+      var live = null, last = null, next = null;
+      for (k = 0; k < evs.length; k++) {
+        if (evs[k].state === "in") live = evs[k];
+        else if (evs[k].state === "post") last = evs[k];
+        else if (!next && evs[k].state === "pre") next = evs[k];
+      }
+      var pick = null, kind = "";
+      if (live) { pick = live; kind = "live"; }
+      else if (last && now - last.date < 6 * 3600000) { pick = last; kind = "last"; }
+      else if (next && next.date - now < 7 * 864e5) { pick = next; kind = "next"; }
+      else if (last) { pick = last; kind = "last"; }
+      else if (next) { pick = next; kind = "next"; }
+      if (pick) out.push({ g: pick, kind: kind, label: fs.name + ", " + LEAGUES[fs.league][0] });
+    }
+    var rank = { live: 0, next: 1, last: 2 };
+    out.sort(function (a, b) { return (rank[a.kind] - rank[b.kind]) || (a.kind === "last" ? b.g.date - a.g.date : a.g.date - b.g.date); });
+    // While any of your teams is playing, the spotlight stays on the live games.
+    var liveOnly = [];
+    for (i = 0; i < out.length; i++) if (out[i].kind === "live") liveOnly.push(out[i]);
+    return liveOnly.length ? liveOnly : out;
+  }
+  function spotTeam(t, g) {
+    var row = el("div", "sp-team flexrow" + (g.state === "post" && !t.winner && g.home.score !== g.away.score ? " lose" : ""));
+    row.appendChild(logoNode(t));
+    var nm = el("div", "nm");
+    if (t.rank) nm.appendChild(el("span", "rank", String(t.rank)));
+    nm.appendChild(document.createTextNode(t.name));
+    row.appendChild(nm);
+    row.appendChild(el("div", "pts", g.state === "pre" ? "" : String(t.score)));
+    return row;
+  }
+  // Returns true if the spotlight appeared or disappeared (so the list needs to re-fit).
+  function renderSpot() {
+    var box = $("spot"), items = spotItems(), wasShown = box.style.display !== "none";
+    clear(box);
+    if (!items.length) { box.style.display = "none"; return wasShown; }
+    box.style.display = "";
+    // If a score just changed, jump to that game and flash it.
+    var flashId = null;
+    for (var i = 0; i < items.length; i++) {
+      var gi = items[i].g, key = gi.away.score + "-" + gi.home.score;
+      if (gi.state === "in" && lastSpotScore[gi.id] != null && lastSpotScore[gi.id] !== key) { flashId = gi.id; spotIdx = i; }
+      lastSpotScore[gi.id] = key;
+    }
+    if (spotIdx >= items.length) spotIdx = 0;
+    var it = items[spotIdx], g = it.g;
+    var card = el("div", "spot" + (g.id === flashId ? " flash" : ""));
+    var head = el("div", "sp-head flexrow");
+    head.appendChild(el("span", null, "My teams"));
+    head.appendChild(el("span", null, items.length > 1 ? (spotIdx + 1) + " of " + items.length : ""));
+    card.appendChild(head);
+    var cap = el("div", "sp-cap flexrow");
+    cap.appendChild(el("span", "sp-team-name", it.label));
+    cap.appendChild(el("span", it.kind === "live" ? "sp-live" : "sp-kind", it.kind === "live" ? "\u25CF Live" : it.kind === "next" ? "Next game" : "Last game"));
+    card.appendChild(cap);
+    card.appendChild(bugNode(g, null, true));
+    box.appendChild(card);
+    return !wasShown;
+  }
+  function rotateSpot() {
+    if ($("setup").className.match(/\bon\b/)) return;
+    var n = spotItems().length;
+    if (n > 1) { spotIdx = (spotIdx + 1) % n; renderSpot(); }
+  }
   function renderScores() {
     var keepTitle = sections[secIdx] && sections[secIdx].title;
     sections = buildSections();
@@ -421,6 +757,8 @@ button { font-family: inherit; -webkit-appearance: none; }
     for (var i = 0; i < sections.length; i++) if (sections[i].title === keepTitle) found = i;
     if (sections[found] && sections[found].title !== keepTitle) pageIdx = 0;
     secIdx = found;
+    if (!moved) { secIdx = 0; pageIdx = 0; }
+    renderSpot();
     drawPage();
     $("scoreFoot").textContent = scoreErr ? "Couldn’t reach ESPN. Trying again in a minute." : "";
   }
@@ -441,7 +779,7 @@ button { font-family: inherit; -webkit-appearance: none; }
       clear(list);
       var start = pageIdx * size;
       if (start >= sec.items.length) { pageIdx = Math.max(0, Math.ceil(sec.items.length / size) - 1); start = pageIdx * size; }
-      for (var i = start; i < Math.min(sec.items.length, start + size); i++) list.appendChild(gameNode(sec.items[i].g, sec.items[i].cap));
+      for (var i = start; i < Math.min(sec.items.length, start + size); i++) list.appendChild(bugNode(sec.items[i].g, sec.items[i].cap));
     }
     var first = pageIdx * perPage;
     pageIdx = Math.floor(first / size);
@@ -458,19 +796,21 @@ button { font-family: inherit; -webkit-appearance: none; }
   function pages() { var s = sections[secIdx]; return s ? Math.ceil(s.items.length / perPage) : 1; }
   function nextPage() {
     if (!sections.length) return;
+    moved = true;
     if (pageIdx < pages() - 1) pageIdx++;
     else { secIdx = (secIdx + 1) % sections.length; pageIdx = 0; }
     drawPage();
   }
   function prevPage() {
     if (!sections.length) return;
+    moved = true;
     if (pageIdx > 0) pageIdx--;
     else if (secIdx > 0) { secIdx--; pageIdx = Math.max(0, Math.ceil(sections[secIdx].items.length / perPage) - 1); }
     drawPage();
   }
   $("pgDown").addEventListener("click", function () { pausedUntil = Date.now() + 60000; nextPage(); });
   $("pgUp").addEventListener("click", function () { pausedUntil = Date.now() + 60000; prevPage(); });
-  function rotate() { if (Date.now() >= pausedUntil && !$("setup").className.match(/\bon\b/)) nextPage(); }
+  function rotate() { rotateSpot(); if (Date.now() >= pausedUntil && !$("setup").className.match(/\bon\b/)) nextPage(); }
 
   /* ================= STOCKS ================= */
   // Eastern Time without Intl (old Safari): US daylight-saving rules.
@@ -486,25 +826,27 @@ button { font-family: inherit; -webkit-appearance: none; }
   }
   function marketOpen() { var p = et(Date.now()); return p.dow > 0 && p.dow < 6 && p.min >= 570 && p.min < 960; }
 
-  var HKEY = "hblite.hist";
-  var hist = (function () { try { return JSON.parse(localStorage.getItem(HKEY) || "null"); } catch (e) { return null; } })();
-  function saveHist() { try { localStorage.setItem(HKEY, JSON.stringify(hist)); } catch (e) {} }
-  var quotes = {}, stockErr = "", tdLast = 0;
+  var HKEY = "hblite.hist2";
+  var hists = (function () { try { return JSON.parse(localStorage.getItem(HKEY) || "{}") || {}; } catch (e) { return {}; } })();
+  function saveHist() { try { localStorage.setItem(HKEY, JSON.stringify(hists)); } catch (e) {} }
+  var quotes = {}, stockErr = "", tdLast = {}, stIdx = 0, stPausedUntil = 0;
+  function curSym() { var t = cfg.tickers; if (!t.length) return null; if (stIdx >= t.length) stIdx = 0; return t[stIdx]; }
 
   function record(sym, q) {
     var ts = q.t ? q.t * 1000 : Date.now(), p = et(ts);
     if (p.min < 570 || p.min > 960) return;
-    if (!hist || hist.sym !== sym || hist.date !== p.date) hist = { sym: sym, date: p.date, pts: [] };
-    hist.pc = q.pc;
-    if (!hist.pts.length && q.o) hist.pts.push([ts - (p.min - 570) * 60000, q.o]);
-    var last = hist.pts[hist.pts.length - 1];
-    if (!last || ts - last[0] > 30000) hist.pts.push([ts, q.c]); else last[1] = q.c;
-    if (hist.pts.length > 400) hist.pts.splice(1, hist.pts.length - 400);
+    var h = hists[sym];
+    if (!h || h.date !== p.date) h = hists[sym] = { date: p.date, pts: [] };
+    h.pc = q.pc;
+    if (!h.pts.length && q.o) h.pts.push([ts - (p.min - 570) * 60000, q.o]);
+    var last = h.pts[h.pts.length - 1];
+    if (!last || ts - last[0] > 30000) h.pts.push([ts, q.c]); else last[1] = q.c;
+    if (h.pts.length > 400) h.pts.splice(1, h.pts.length - 400);
   }
   function backfill(sym, q, done) {
     var wait = marketOpen() ? 15 * 60000 : 3 * 3600000;
-    if (!cfg.twelveDataKey || Date.now() - tdLast < wait) { done(); return; }
-    tdLast = Date.now();
+    if (!cfg.twelveDataKey || Date.now() - (tdLast[sym] || 0) < wait) { done(); return; }
+    tdLast[sym] = Date.now();
     getJSON("https://api.twelvedata.com/time_series?symbol=" + encodeURIComponent(sym) + "&interval=5min&outputsize=80&timezone=UTC&apikey=" + encodeURIComponent(cfg.twelveDataKey), function (j) {
       if (j.status === "ok" && j.values && j.values.length) {
         var bars = [], i;
@@ -516,16 +858,21 @@ button { font-family: inherit; -webkit-appearance: none; }
           if (!pts.length) pts.push([bars[i].ts, bars[i].o]);
           pts.push([bars[i].ts + 300000, bars[i].c]);
         }
-        var extra = [];
-        if (hist && hist.sym === sym && hist.date === day) {
-          for (i = 0; i < hist.pts.length; i++) if (hist.pts[i][0] > pts[pts.length - 1][0]) extra.push(hist.pts[i]);
+        var old = hists[sym], extra = [];
+        if (old && old.date === day) {
+          for (i = 0; i < old.pts.length; i++) if (old.pts[i][0] > pts[pts.length - 1][0]) extra.push(old.pts[i]);
         }
-        var pc = hist && hist.sym === sym && hist.date === day ? hist.pc : null;
+        var pc = old && old.date === day ? old.pc : null;
         if (q && q.t && et(q.t * 1000).date === day) pc = q.pc;
-        hist = { sym: sym, date: day, pts: pts.concat(extra), pc: pc };
+        hists[sym] = { date: day, pts: pts.concat(extra), pc: pc };
       }
       done();
     }, function () { done(); });
+  }
+  // One ticker after another, so the free plan's per-minute limit isn't hit.
+  function backfillAll(syms, i, done) {
+    if (i >= syms.length) { done(); return; }
+    backfill(syms[i], quotes[syms[i]], function () { backfillAll(syms, i + 1, done); });
   }
 
   function loadStocks() {
@@ -540,9 +887,9 @@ button { font-family: inherit; -webkit-appearance: none; }
     })(syms[i]);
     function finish() {
       if (stockErr !== "key") stockErr = bad === syms.length ? "net" : "";
-      var head = syms[0], q = quotes[head];
-      if (q) record(head, q);
-      backfill(head, q, function () { saveHist(); renderStocks(); });
+      if (bad < syms.length) markOk("stocks");
+      for (var k = 0; k < syms.length; k++) if (quotes[syms[k]]) record(syms[k], quotes[syms[k]]);
+      backfillAll(syms, 0, function () { saveHist(); renderStocks(); });
     }
   }
 
@@ -552,41 +899,53 @@ button { font-family: inherit; -webkit-appearance: none; }
   }
 
   function renderStocks() {
-    var head = cfg.tickers[0], q = head && quotes[head];
+    var head = curSym(), q = head && quotes[head], h = head && hists[head];
     $("stName").textContent = head ? (NAMES[head] ? NAMES[head] + " (" + head + ")" : head) : "Markets";
-    var sameSession = hist && hist.sym === head && hist.date === et(Date.now()).date;
-    $("stState").textContent = marketOpen() ? "Market open" : (hist && hist.sym === head && !sameSession ? "Last session" : "Market closed");
+    var sameSession = h && h.date === et(Date.now()).date;
+    $("stState").textContent = marketOpen() ? "Market open" : (h && !sameSession ? "Last session" : "Market closed");
     if (q) {
       var c = chgText(q);
       $("stPrice").textContent = money(q.c);
       $("stChg").textContent = c.text; $("stChg").className = "chg " + c.cls;
     } else { $("stPrice").textContent = ""; $("stChg").textContent = ""; }
 
+    // Every ticker is listed; the one in the chart is highlighted. Tap one to show it.
     var box = $("tickers"); clear(box);
-    for (var i = 1; i < cfg.tickers.length; i++) {
-      var s = cfg.tickers[i], tq = quotes[s], row = el("div", "tk flexrow");
+    for (var i = 0; i < cfg.tickers.length; i++) (function (i) {
+      var s = cfg.tickers[i], tq = quotes[s], row = el("div", "tk flexrow" + (i === stIdx ? " cur" : ""));
       var name = el("div", "s", s);
       if (NAMES[s]) name.appendChild(el("small", null, NAMES[s]));
       row.appendChild(name);
       row.appendChild(el("div", "p", tq ? money(tq.c) : "—"));
       if (tq) { var cc = chgText(tq); row.appendChild(el("div", "c " + cc.cls, (tq.dp > 0 ? "▲ " : tq.dp < 0 ? "▼ " : "") + cc.pct)); }
       else row.appendChild(el("div", "c flat", ""));
+      row.addEventListener("click", function () { stIdx = i; stPausedUntil = Date.now() + 60000; renderStocks(); });
       box.appendChild(row);
-    }
+    })(i);
     var foot = "";
     if (stockErr === "key") foot = "Finnhub didn’t accept the API key. Check settings.";
     else if (stockErr === "net") foot = "Couldn’t reach the stock service. Trying again soon.";
     $("stFoot").textContent = foot;
     drawChart();
   }
+  // Show the next ticker's chart every 12 seconds (paused for a minute after a tap).
+  function rotateStocks() {
+    var t = cfg.tickers;
+    if (t.length < 2 || Date.now() < stPausedUntil || $("setup").className.match(/\bon\b/)) return;
+    for (var step = 1; step <= t.length; step++) {
+      var n = (stIdx + step) % t.length;
+      if (quotes[t[n]] || hists[t[n]]) { stIdx = n; break; }
+    }
+    renderStocks();
+  }
 
   // A plain line chart on one canvas: cheap to draw on old hardware.
   function drawChart() {
     var box = $("chartbox"), c = $("chart"), msg = $("chartMsg");
     var w = box.clientWidth, h = box.clientHeight;
-    var head = cfg.tickers[0];
+    var head = curSym(), hist = head && hists[head];
     if (stockErr === "nokey") { msg.style.display = ""; msg.textContent = "Tap the gear in the corner to add a free Finnhub key for stock prices."; c.width = 0; return; }
-    if (!hist || hist.sym !== head || hist.pts.length < 2 || !w || !h) {
+    if (!hist || !hist.pts || hist.pts.length < 2 || !w || !h) {
       msg.style.display = "";
       msg.textContent = marketOpen() ? "The chart fills in as the market trades." : "The chart starts when the market opens.";
       c.width = 0; return;
@@ -646,6 +1005,145 @@ button { font-family: inherit; -webkit-appearance: none; }
     g.fillText("4:00 ET", w - pr, h - 5);
   }
 
+  /* ================= WEATHER =================
+     Open-Meteo first; if the old iPad can't reach it, the National Weather Service. */
+  var ICONS = {
+    sun: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="32" cy="32" r="11"/><path d="M32 8v7M32 49v7M8 32h7M49 32h7M15 15l5 5M44 44l5 5M15 49l5-5M44 20l5-5"/></svg>',
+    moon: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M42 44a18 18 0 0 1-16-30 18 18 0 1 0 24 24 18 18 0 0 1-8 6z"/></svg>',
+    partly: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="8"/><path d="M24 8v4M10 24h4M13 13l3 3M35 13l-3 3"/><path d="M22 50h24a9 9 0 0 0 0-18 13 13 0 0 0-24 3 7.5 7.5 0 0 0 0 15z"/></svg>',
+    cloud: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M18 48h28a10 10 0 0 0 0-20 14 14 0 0 0-27 3 8.5 8.5 0 0 0-1 17z"/></svg>',
+    rain: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 40h28a10 10 0 0 0 0-20 14 14 0 0 0-27 3 8.5 8.5 0 0 0-1 17z"/><path d="M24 46l-3 8M33 46l-3 8M42 46l-3 8"/></svg>',
+    storm: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 38h28a10 10 0 0 0 0-20 14 14 0 0 0-27 3 8.5 8.5 0 0 0-1 17z"/><path d="M34 40l-6 10h8l-5 9"/></svg>',
+    snow: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 38h28a10 10 0 0 0 0-20 14 14 0 0 0-27 3 8.5 8.5 0 0 0-1 17z"/><path d="M24 46v8M20 50h8M40 46v8M36 50h8"/></svg>',
+    fog: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 24h40M8 33h48M14 42h36M20 51h24"/></svg>'
+  };
+  function wmo(code) {
+    if (code === 0) return ["Clear", "sun"];
+    if (code === 1) return ["Mostly clear", "sun"];
+    if (code === 2) return ["Partly cloudy", "partly"];
+    if (code === 3) return ["Cloudy", "cloud"];
+    if (code === 45 || code === 48) return ["Fog", "fog"];
+    if (code >= 51 && code <= 57) return ["Drizzle", "rain"];
+    if (code >= 61 && code <= 67) return [code >= 65 ? "Heavy rain" : "Rain", "rain"];
+    if (code >= 71 && code <= 77) return ["Snow", "snow"];
+    if (code >= 80 && code <= 82) return ["Showers", "rain"];
+    if (code === 85 || code === 86) return ["Snow showers", "snow"];
+    if (code >= 95) return ["Thunderstorms", "storm"];
+    return ["", "cloud"];
+  }
+  // Pick an icon from the National Weather Service's words
+  function nwsIcon(text, isDay) {
+    var t = String(text || "").toLowerCase();
+    if (/thunder|storm/.test(t)) return "storm";
+    if (/snow|sleet|flurr|ice/.test(t)) return "snow";
+    if (/rain|shower|drizzle/.test(t)) return "rain";
+    if (/fog|haze|smoke/.test(t)) return "fog";
+    if (/partly|mostly sunny|mostly clear/.test(t)) return isDay ? "partly" : "moon";
+    if (/cloud|overcast/.test(t)) return "cloud";
+    return isDay ? "sun" : "moon";
+  }
+  function showWeather(w) {
+    markOk("weather");
+    $("wxIcon").innerHTML = ICONS[w.icon] || ICONS.cloud;
+    $("wxTemp").textContent = Math.round(w.temp) + "°";
+    $("wxCond").textContent = w.cond;
+    $("wxSub").textContent = "High " + Math.round(w.hi) + "°, low " + Math.round(w.lo) + "°" + (w.pop >= 20 ? ", " + w.pop + "% rain" : "");
+    $("wxTom").textContent = w.tom ? "Tomorrow " + Math.round(w.tom.hi) + "°/" + Math.round(w.tom.lo) + "°, " + w.tom.cond.toLowerCase() : "";
+  }
+  function weatherFailed() {
+    $("wxCond").textContent = "Weather unavailable";
+    $("wxSub").textContent = "Trying again in 15 minutes";
+    $("wxTom").textContent = "";
+  }
+  function loadWeather() {
+    var pl = cfg.place;
+    getJSON("https://api.open-meteo.com/v1/forecast?latitude=" + pl.lat + "&longitude=" + pl.lon +
+      "&current=temperature_2m,weather_code,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max" +
+      "&temperature_unit=fahrenheit&timezone=auto&forecast_days=2", function (j) {
+        var c = j.current, d = j.daily;
+        if (!c || !d) { loadWeatherNWS(); return; }
+        var now = wmo(c.weather_code), tom = wmo(d.weather_code[1]);
+        var icon = now[1];
+        if (!c.is_day && (icon === "sun" || icon === "partly")) icon = icon === "sun" ? "moon" : "cloud";
+        showWeather({
+          temp: c.temperature_2m, cond: now[0], icon: icon,
+          hi: d.temperature_2m_max[0], lo: d.temperature_2m_min[0], pop: d.precipitation_probability_max ? d.precipitation_probability_max[0] : 0,
+          tom: { hi: d.temperature_2m_max[1], lo: d.temperature_2m_min[1], cond: tom[0] }
+        });
+      }, loadWeatherNWS);
+  }
+  var nwsUrls = null;
+  function loadWeatherNWS() {
+    var pl = cfg.place;
+    function withUrls() {
+      getJSON(nwsUrls.hourly, function (hj) {
+        var hp = (hj.properties && hj.properties.periods) || [];
+        if (!hp.length) { weatherFailed(); return; }
+        getJSON(nwsUrls.daily, function (dj) {
+          var dp = (dj.properties && dj.properties.periods) || [], hi = null, lo = null, tom = null, pop = 0, i;
+          var today = new Date(), tmr = new Date(); tmr.setDate(tmr.getDate() + 1);
+          for (i = 0; i < dp.length; i++) {
+            var st = new Date(parseISO(dp[i].startTime));
+            if (i === 0 && dp[i].probabilityOfPrecipitation) pop = dp[i].probabilityOfPrecipitation.value || 0;
+            if (dp[i].isDaytime && sameDay(st, today) && hi === null) hi = dp[i].temperature;
+            if (!dp[i].isDaytime && lo === null) lo = dp[i].temperature;
+            if (dp[i].isDaytime && sameDay(st, tmr) && !tom) {
+              tom = { hi: dp[i].temperature, lo: dp[i + 1] ? dp[i + 1].temperature : dp[i].temperature, cond: dp[i].shortForecast };
+            }
+          }
+          if (hi === null) hi = hp[0].temperature;
+          if (lo === null) lo = hp[0].temperature;
+          showWeather({ temp: hp[0].temperature, cond: hp[0].shortForecast, icon: nwsIcon(hp[0].shortForecast, hp[0].isDaytime), hi: hi, lo: lo, pop: pop, tom: tom });
+        }, weatherFailed);
+      }, weatherFailed);
+    }
+    if (nwsUrls && nwsUrls.key === pl.lat + "," + pl.lon) { withUrls(); return; }
+    getJSON("https://api.weather.gov/points/" + (+pl.lat).toFixed(4) + "," + (+pl.lon).toFixed(4), function (j) {
+      var p = j.properties || {};
+      if (!p.forecast || !p.forecastHourly) { weatherFailed(); return; }
+      nwsUrls = { key: pl.lat + "," + pl.lon, daily: p.forecast, hourly: p.forecastHourly };
+      withUrls();
+    }, weatherFailed);
+  }
+
+  /* ================= SEVERE WEATHER ALERTS (National Weather Service) ================= */
+  var alerts = [], alertI = 0;
+  function whenText(t) { var d = new Date(t); return sameDay(d, new Date()) ? fmtTime(d) : SDAYS[d.getDay()] + " " + fmtTime(d); }
+  function loadAlerts() {
+    var pl = cfg.place;
+    getJSON("https://api.weather.gov/alerts/active?point=" + (+pl.lat).toFixed(4) + "," + (+pl.lon).toFixed(4), function (j) {
+      var f = j.features || [], out = [], now = Date.now(), rank = { Extreme: 0, Severe: 1, Moderate: 2, Minor: 3 };
+      for (var i = 0; i < f.length; i++) {
+        var p = f[i].properties;
+        if (!p || p.status !== "Actual") continue;
+        var end = parseISO(p.ends || p.expires);
+        if (end && end < now) continue;
+        out.push(p);
+      }
+      out.sort(function (a, b) { return (rank[a.severity] != null ? rank[a.severity] : 4) - (rank[b.severity] != null ? rank[b.severity] : 4); });
+      var changed = (alerts.length > 0) !== (out.length > 0);
+      alerts = out;
+      renderAlert(changed);
+    }, function () {});
+  }
+  function renderAlert(layoutChanged) {
+    var box = $("alert");
+    if (!alerts.length) { box.style.display = "none"; clear(box); }
+    else {
+      var a = alerts[alertI % alerts.length];
+      var lvl = a.severity === "Extreme" || a.severity === "Severe" ? "severe" : a.severity === "Moderate" ? "moderate" : "minor";
+      box.className = "alert " + lvl; box.style.display = "";
+      clear(box);
+      var until = parseISO(a.ends || a.expires);
+      box.appendChild(el("strong", null, a.event + (until ? " until " + whenText(until) : "")));
+      var adv = String(a.instruction || "").replace(/\s+/g, " "), m = /^[^.]*\.?/.exec(adv);
+      adv = m ? m[0] : "";
+      if (adv) box.appendChild(el("span", "adv", adv));
+      if (alerts.length > 1) box.appendChild(el("span", "cnt", (alertI % alerts.length + 1) + " of " + alerts.length));
+    }
+    if (layoutChanged) setTimeout(function () { drawPage(); drawChart(); }, 60);
+  }
+
   /* ---------- Night dimming and burn-in protection ---------- */
   var wakeUntil = 0;
   function mins(t) { var p = String(t || "0:0").split(":"); return (+p[0]) * 60 + (+p[1] || 0); }
@@ -667,7 +1165,28 @@ button { font-family: inherit; -webkit-appearance: none; }
   }
 
   /* ---------- Settings screen ---------- */
+  var pendingPlace = null;
+  function findCity() {
+    var q = String($("inCity").value || "").replace(/^\s+|\s+$/g, ""), box = $("cityRes");
+    if (!q) return;
+    clear(box); box.appendChild(el("div", "hint", "Searching…"));
+    getJSON("https://geocoding-api.open-meteo.com/v1/search?name=" + encodeURIComponent(q) + "&count=5&language=en&format=json", function (j) {
+      clear(box);
+      var r = j.results || [];
+      if (!r.length) { box.appendChild(el("div", "hint", "No places found.")); return; }
+      for (var i = 0; i < r.length; i++) (function (p) {
+        var name = p.name + (p.admin1 ? ", " + p.admin1 : "") + (p.country_code !== "US" && p.country ? ", " + p.country : "");
+        var b = el("button", null, name);
+        b.addEventListener("click", function () { pendingPlace = { name: name, lat: p.latitude, lon: p.longitude }; $("curPlace").textContent = "Will show: " + name; clear(box); });
+        box.appendChild(b);
+      })(r[i]);
+    }, function () { clear(box); box.appendChild(el("div", "hint", "Search didn’t work on this iPad. You can set the location in the file instead.")); });
+  }
+  $("findCity").addEventListener("click", findCity);
   function openSetup() {
+    pendingPlace = null;
+    $("curPlace").textContent = "Now showing: " + cfg.place.name;
+    $("inCity").value = ""; clear($("cityRes"));
     $("inFh").value = cfg.finnhubKey; $("inTd").value = cfg.twelveDataKey;
     $("inTk").value = cfg.tickers.join(", ");
     $("inNs").value = cfg.nightStart; $("inNe").value = cfg.nightEnd;
@@ -691,13 +1210,15 @@ button { font-family: inherit; -webkit-appearance: none; }
     var s = {
       finnhubKey: trim($("inFh").value), twelveDataKey: trim($("inTd").value),
       tickers: tk.length ? tk : CONFIG.tickers, leagues: lg,
-      nightStart: $("inNs").value || "22:00", nightEnd: $("inNe").value || "06:30"
+      nightStart: $("inNs").value || "22:00", nightEnd: $("inNe").value || "06:30",
+      place: pendingPlace || cfg.place
     };
     store(s);
     // Put the settings in the address so Add to Home Screen keeps them.
     var q = "?fh=" + encodeURIComponent(s.finnhubKey) + "&td=" + encodeURIComponent(s.twelveDataKey) +
       "&tk=" + encodeURIComponent(s.tickers.join(",")) + "&lg=" + encodeURIComponent(s.leagues.join(",")) +
-      "&ns=" + encodeURIComponent(s.nightStart) + "&ne=" + encodeURIComponent(s.nightEnd);
+      "&ns=" + encodeURIComponent(s.nightStart) + "&ne=" + encodeURIComponent(s.nightEnd) +
+      "&pl=" + encodeURIComponent(s.place.name) + "&plat=" + s.place.lat + "&plon=" + s.place.lon;
     location.replace(location.pathname + q);
   });
 
@@ -705,10 +1226,17 @@ button { font-family: inherit; -webkit-appearance: none; }
   tick();
   renderStocks();
   loadBoards(); loadFavorites(); loadStocks();
+  loadWeather();
+  setInterval(loadWeather, 15 * 60000);
+  loadAlerts();
+  setInterval(loadAlerts, 5 * 60000);
+  setInterval(function () { if (alerts.length > 1) { alertI++; renderAlert(false); } }, 10000);
+  setInterval(function () { if (renderSpot()) drawPage(); renderHealth(); }, 30000);
   setInterval(loadBoards, 60000);
   setInterval(loadFavorites, 10 * 60000);
   (function stockLoop() { setTimeout(function () { loadStocks(); stockLoop(); }, marketOpen() ? 60000 : 10 * 60000); })();
   setInterval(rotate, 10000);
+  setInterval(rotateStocks, 12000);
   setInterval(shift, 3 * 60000);
   window.addEventListener("orientationchange", function () { setTimeout(function () { drawPage(); drawChart(); }, 400); });
   window.addEventListener("resize", function () { drawChart(); });
