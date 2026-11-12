@@ -102,8 +102,8 @@ body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font
 <div class="setup" id="setup">
   <div class="setup-in">
     <h1>Clock settings</h1>
-    <p>Paste the web app address from your Google calendar helper and the code you put in it. After saving, tap Share and then Add to Home Screen so the clock opens full screen with these settings.</p>
-    <label for="inUrl">Calendar helper address</label>
+    <p>Enter the code you put in your Google calendar helper (and its web app address, if it isn’t built in). After saving, tap Share and then Add to Home Screen so the clock opens full screen with these settings.</p>
+    <label for="inUrl" id="inUrlLabel">Calendar helper address</label>
     <input id="inUrl" type="url" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="https://script.google.com/macros/s/.../exec">
     <label for="inToken">Code</label>
     <input id="inToken" type="text" autocapitalize="off" autocorrect="off" spellcheck="false">
@@ -119,6 +119,10 @@ body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font
 <script>
 (function () {
   "use strict";
+
+  /* ===== PASTE YOUR CALENDAR HELPER ADDRESS HERE (the Web app URL ending in /exec) =====
+     Putting it here means the iPad only needs the short page address and your code. */
+  var BUILT_IN_HELPER = "https://script.google.com/macros/s/AKfycbzt2h2Lp14Z7GjWvCZWe0ZdmP8HQiUyGqvnn8e_B27Mn475VzgCoJ2Yo7rBy6giw5GZ/exec";
 
   var DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -144,7 +148,7 @@ body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font
   var saved = load();
   var params = readParams();
   var cfg = {
-    url: params.u || saved.url || "",
+    url: params.u || saved.url || BUILT_IN_HELPER,
     token: params.t || saved.token || "",
     nightStart: params.ns || saved.nightStart || "22:00",
     nightEnd: params.ne || saved.nightEnd || "06:30"
@@ -304,7 +308,10 @@ body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font
 
   /* ---------- Settings screen ---------- */
   function openSetup() {
-    $("inUrl").value = cfg.url; $("inToken").value = cfg.token;
+    var builtIn = BUILT_IN_HELPER && cfg.url === BUILT_IN_HELPER;
+    $("inUrl").style.display = builtIn ? "none" : "";
+    $("inUrlLabel").style.display = builtIn ? "none" : "";
+    $("inUrl").value = builtIn ? "" : cfg.url; $("inToken").value = cfg.token;
     $("inNs").value = cfg.nightStart; $("inNe").value = cfg.nightEnd;
     $("setupMsg").textContent = "";
     $("setup").className = "setup on"; updateDim();
@@ -314,13 +321,14 @@ body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font
   $("cancel").addEventListener("click", closeSetup);
   $("save").addEventListener("click", function () {
     var u = $("inUrl").value.replace(/^\s+|\s+$/g, ""), t = $("inToken").value.replace(/^\s+|\s+$/g, "");
+    if (!u && BUILT_IN_HELPER) u = BUILT_IN_HELPER;
     if (!/^https:\/\//.test(u)) { $("setupMsg").textContent = "The address should start with https://"; return; }
     if (!t) { $("setupMsg").textContent = "Enter the code from your calendar helper."; return; }
     var ns = $("inNs").value || "22:00", ne = $("inNe").value || "06:30";
     saved.url = u; saved.token = t; saved.nightStart = ns; saved.nightEnd = ne; saved.events = null; saved.lastOk = 0;
     store(saved);
     // Put the settings in the address so Add to Home Screen remembers them.
-    var q = "?u=" + encodeURIComponent(u) + "&t=" + encodeURIComponent(t) + "&ns=" + encodeURIComponent(ns) + "&ne=" + encodeURIComponent(ne);
+    var q = "?" + (u !== BUILT_IN_HELPER ? "u=" + encodeURIComponent(u) + "&" : "") + "t=" + encodeURIComponent(t) + "&ns=" + encodeURIComponent(ns) + "&ne=" + encodeURIComponent(ne);
     location.replace(location.pathname + q);
   });
 
