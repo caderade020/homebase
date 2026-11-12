@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home Base connection test</title>
+<style>
+body { margin: 0; background: #0b1220; color: #e9eef5; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 28px 22px 60px; }
+h1 { font-weight: 300; font-size: 30px; margin: 0 0 6px; }
+p { color: #9fb0c6; font-size: 16px; line-height: 1.45; }
+.row { border: 1px solid #22304a; border-radius: 10px; padding: 12px 14px; margin-top: 10px; }
+.name { font-size: 19px; font-weight: 500; }
+.res { font-size: 16px; margin-top: 4px; color: #9fb0c6; }
+.ok { color: #4cc287; } .bad { color: #ff7b6c; } .wait { color: #e0a34a; }
+.info { font-size: 13px; color: #6f7c90; margin-top: 22px; word-break: break-all; }
+button { margin-top: 20px; font-size: 18px; padding: 12px 20px; border-radius: 10px; border: 0; background: #4a86d8; color: #fff; -webkit-appearance: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Connection test</h1>
+  <p>This checks each service Home Base uses, the same way the dashboard does. Take a screenshot when every line has a result (press the Home and power buttons together).</p>
+  <div id="tests"></div>
+  <button id="again">Run again</button>
+  <div class="info" id="info"></div>
+</div>
+<script>
+(function () {
+  "use strict";
+  var errors = [];
+  window.onerror = function (msg, src, line) { errors.push(msg + " (line " + line + ")"); showInfo(); };
+
+  var TESTS = [
+    ["This website (control)", "index.html?test=" + Date.now(), "text"],
+    ["ESPN scores", "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard", "json"],
+    ["ESPN team schedule", "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/245/schedule", "json"],
+    ["Weather (Open-Meteo)", "https://api.open-meteo.com/v1/forecast?latitude=29.71&longitude=-98.67&current=temperature_2m", "json"],
+    ["Weather backup (National Weather Service)", "https://api.weather.gov/points/29.7105,-98.6667", "json"],
+    ["Stocks (Finnhub, no key: “401” means it connected)", "https://finnhub.io/api/v1/quote?symbol=SPY", "json"]
+  ];
+
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+
+  function test(t, out) {
+    var started = Date.now(), x, done = false;
+    out.className = "res wait"; out.textContent = "Testing…";
+    function finish(cls, text) { if (done) return; done = true; out.className = "res " + cls; out.textContent = text + " (" + ((Date.now() - started) / 1000).toFixed(1) + " s)"; }
+    try {
+      x = new XMLHttpRequest();
+      x.open("GET", t[1], true);
+      x.timeout = 25000;
+      x.onload = function () {
+        var len = (x.responseText || "").length, note = "";
+        if (t[2] === "json") {
+          try { JSON.parse(x.responseText); note = ", data readable"; }
+          catch (e) { note = ", but the data couldn’t be read: " + e.message; }
+        }
+        if (x.status >= 200 && x.status < 300) finish(note.indexOf("couldn") >= 0 ? "bad" : "ok", "Working: status " + x.status + ", " + Math.round(len / 1024) + " KB" + note);
+        else if (x.status === 401 || x.status === 403) finish("ok", "Connected: status " + x.status + " (expected without a key)");
+        else finish("bad", "Connected but got status " + x.status);
+      };
+      x.onerror = function () { finish("bad", "Blocked or failed (error event, status " + x.status + ")"); };
+      x.ontimeout = function () { finish("bad", "Timed out"); };
+      x.onabort = function () { finish("bad", "Aborted"); };
+      x.send();
+    } catch (e) {
+      finish("bad", "Couldn’t start: " + e.message);
+    }
+  }
+
+  function run() {
+    var box = $("tests");
+    while (box.firstChild) box.removeChild(box.firstChild);
+    for (var i = 0; i < TESTS.length; i++) {
+      var row = el("div", "row"), res = el("div", "res");
+      row.appendChild(el("div", "name", TESTS[i][0]));
+      row.appendChild(res);
+      box.appendChild(row);
+      test(TESTS[i], res);
+    }
+    showInfo();
+  }
+  function showInfo() {
+    $("info").textContent = "Page: " + location.href.split("?")[0] + "  |  Home Screen app: " + (navigator.standalone ? "yes" : "no") +
+      "  |  Online: " + navigator.onLine + "  |  " + navigator.userAgent + (errors.length ? "  |  Errors: " + errors.join("; ") : "");
+  }
+  $("again").addEventListener("click", run);
+  run();
+})();
+</script>
+</body>
+</html>
