@@ -124,6 +124,8 @@ button { font-family: inherit; -webkit-appearance: none; }
 .bs.r { -webkit-flex-direction: row-reverse; flex-direction: row-reverse; }
 .bs .logo, .bs .badge { width: 32px; height: 32px; line-height: 32px; border-radius: 16px; margin: 0 10px 0 0; }
 .bs.r .logo, .bs.r .badge { margin: 0 0 0 10px; }
+/* Logos inside the white circle sit dead center on both sides */
+.bs .lwrap .logo, .bs .lwrap .badge, .bs.r .lwrap .logo, .bs.r .lwrap .badge { margin: 0; }
 .bs .ab { font-size: 18px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .bs.lose { opacity: .5; }
 .bs .poss { font-size: 11px; margin: 0 5px; vertical-align: 3px; }
@@ -350,10 +352,20 @@ button { font-family: inherit; -webkit-appearance: none; }
     return t;
   }
   // Direct request (newer devices), or through the relay (old iPads, which block direct requests).
+  // Uses whichever works on this device: direct first, the relay if direct is blocked (old iPads).
+  // It remembers the choice, and falls back to the other way if that one stops working.
+  var route = "direct";
   function getJSON(url, ok, fail) {
-    if (cfg.relay) { viaRelay(url, ok, fail); return; }
-    var x = new XMLHttpRequest(), done = false;
-    try { x.open("GET", url, true); } catch (e) { fail("open"); return; }
+    if (!cfg.relay) { direct(url, ok, fail); return; }
+    var first = route === "relay" ? viaRelay : direct, second = route === "relay" ? direct : viaRelay;
+    first(url, ok, function (why) {
+      if (why === 401 || why === 403 || why === 404) { fail(why); return; }   // the service answered; not a connection problem
+      second(url, function (j) { route = route === "relay" ? "direct" : "relay"; ok(j); }, fail);
+    });
+  }
+  function direct(url, ok, fail) {
+    var x, done = false;
+    try { x = new XMLHttpRequest(); x.open("GET", url, true); } catch (e) { fail("open"); return; }
     x.timeout = 20000;
     x.onreadystatechange = function () {
       if (x.readyState !== 4 || done) return;
@@ -557,14 +569,63 @@ button { font-family: inherit; -webkit-appearance: none; }
     return SMONTHS[d.getMonth()] + " " + d.getDate() + ", " + fmtTime(d);
   }
 
+  // Logos: a small copy from ESPN; if the old iPad can't load it, the plain-http copy;
+  // then the relay, which sends the picture itself. Pictures from the relay are remembered.
+  var LOGO_KEY = "hblite.logos", logoCache = (function () { try { return JSON.parse(localStorage.getItem(LOGO_KEY) || "{}") || {}; } catch (e) { return {}; } })();
+  var logoWay = 0;   // 0: https, 1: http, 2: relay. Moves up the first time a way fails.
+  var logoWaiting = {};
+  function smallLogo(u) {
+    var m = /^https?:\/\/a\.espncdn\.com(\/i\/teamlogos\/[^?]+)/.exec(u || "");
+    return m ? "https://a.espncdn.com/combiner/i?img=" + m[1] + "&w=64&h=64" : u;
+  }
+  function saveLogo(u, data) {
+    logoCache[u] = data;
+    var keys = [], k;
+    for (k in logoCache) if (logoCache.hasOwnProperty(k)) keys.push(k);
+    if (keys.length > 160) delete logoCache[keys[0]];
+    try { localStorage.setItem(LOGO_KEY, JSON.stringify(logoCache)); } catch (e) {}
+  }
+  function relayLogo(u, cb) {
+    if (logoWaiting[u]) { logoWaiting[u].push(cb); return; }
+    logoWaiting[u] = [cb];
+    var name = "hbl" + (++cbN) + "_" + Date.now(), done = false, sc = document.createElement("script");
+    function finish(data) {
+      if (done) return; done = true;
+      try { delete window[name]; } catch (e) { window[name] = undefined; }
+      if (sc.parentNode) sc.parentNode.removeChild(sc);
+      if (data) saveLogo(u, data);
+      var list = logoWaiting[u]; delete logoWaiting[u];
+      for (var i = 0; i < list.length; i++) list[i](data);
+    }
+    window[name] = function (r) { finish(r && r.data ? r.data : null); };
+    sc.onerror = function () { finish(null); };
+    setTimeout(function () { finish(null); }, 30000);
+    sc.src = cfg.relay + (cfg.relay.indexOf("?") < 0 ? "?" : "&") + "img=1&callback=" + name + "&u=" + encodeURIComponent(u);
+    document.body.appendChild(sc);
+  }
   function logoNode(t) {
-    if (!t.logo) return el("div", "badge", (t.abbr || t.name).slice(0, 3));
-    var img = document.createElement("img");
+    var label = (t.abbr || t.name).slice(0, 3);
+    if (!t.logo) return el("div", "badge", label);
+    var img = document.createElement("img"), small = smallLogo(t.logo), way = logoWay;
     img.className = "logo"; img.alt = ""; img.width = 24; img.height = 24;
-    img.onerror = function () { if (img.parentNode) img.parentNode.replaceChild(el("div", "badge", (t.abbr || t.name).slice(0, 3)), img); };
-    img.src = t.logo;
+    function badge() { if (img.parentNode) img.parentNode.replaceChild(el("div", "badge", label), img); }
+    function tryWay() {
+      if (logoCache[small]) { img.src = logoCache[small]; return; }
+      if (way === 0) img.src = small;
+      else if (way === 1) img.src = small.replace(/^https:/, "http:");
+      else if (cfg.relay) relayLogo(small, function (data) { if (data) img.src = data; else badge(); });
+      else badge();
+    }
+    img.onerror = function () {
+      if (way >= 2) { badge(); return; }
+      way++;
+      if (way > logoWay) logoWay = way;   // remember, so other logos skip what didn't work
+      tryWay();
+    };
+    tryWay();
     return img;
   }
+
   function teamLine(t, g) {
     var row = el("div", "team flexrow" + (g.state === "post" && !t.winner && g.home.score !== g.away.score ? " lose" : ""));
     row.appendChild(logoNode(t));
