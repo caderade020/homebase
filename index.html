@@ -262,6 +262,9 @@ button { font-family: inherit; -webkit-appearance: none; }
   <div class="setup-in">
     <h1>Settings</h1>
     <p>After you tap Save, tap Share and then Add to Home Screen. The Home Screen icon keeps these settings.</p>
+    <label class="f" for="inRelay">Relay address (needed on older iPads)</label>
+    <input type="text" id="inRelay" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="https://script.google.com/macros/s/.../exec">
+    <div class="hint">Easier to paste into the file on a computer. See README.md.</div>
     <label class="f" for="inFh">Finnhub API key (for stock prices)</label>
     <input type="text" id="inFh" autocapitalize="off" autocorrect="off" spellcheck="false">
     <div class="hint">Free at finnhub.io/register</div>
@@ -293,6 +296,9 @@ button { font-family: inherit; -webkit-appearance: none; }
      Edit these on a computer before uploading, or change most of them
      on the iPad with the gear in the bottom-right corner. */
   var CONFIG = {
+    // Old iPads (iOS 9) need the free relay to get scores, weather and stocks.
+    // Paste your relay's Web app address (ends in /exec) between the quotes. See README.md.
+    relay: "https://script.google.com/macros/s/AKfycbwjSbGAw1lo51vhwB4OO3XI3_ovhNUyO4ynlt-BCNL_f-0gTZkJjNFUat1Z-TMLsudOOQ/exec",
     leagues: ["nfl", "cfb", "nba", "mlb", "nhl"],
     // Favorite teams as "league:ESPN team ID". 245 is Texas A&M.
     favorites: ["cfb:245", "ncaab:245", "cbase:245"],
@@ -343,7 +349,9 @@ button { font-family: inherit; -webkit-appearance: none; }
     }
     return t;
   }
+  // Direct request (newer devices), or through the relay (old iPads, which block direct requests).
   function getJSON(url, ok, fail) {
+    if (cfg.relay) { viaRelay(url, ok, fail); return; }
     var x = new XMLHttpRequest(), done = false;
     try { x.open("GET", url, true); } catch (e) { fail("open"); return; }
     x.timeout = 20000;
@@ -357,6 +365,28 @@ button { font-family: inherit; -webkit-appearance: none; }
     };
     x.ontimeout = function () { if (!done) { done = true; fail("timeout"); } };
     x.send();
+  }
+  // The relay answers with a small script, which old Safari loads without the cross-site block.
+  var cbN = 0;
+  function viaRelay(url, ok, fail) {
+    var name = "hbr" + (++cbN) + "_" + Date.now(), done = false;
+    var sc = document.createElement("script");
+    var timer = setTimeout(function () { if (finish()) fail("timeout"); }, 30000);
+    function finish() {
+      if (done) return false;
+      done = true; clearTimeout(timer);
+      try { delete window[name]; } catch (e) { window[name] = undefined; }
+      if (sc.parentNode) sc.parentNode.removeChild(sc);
+      return true;
+    }
+    window[name] = function (r) {
+      if (!finish()) return;
+      if (r && r.status >= 200 && r.status < 300 && r.body) ok(r.body);
+      else fail((r && r.status) || "relay");
+    };
+    sc.onerror = function () { if (finish()) fail("relay"); };
+    sc.src = cfg.relay + (cfg.relay.indexOf("?") < 0 ? "?" : "&") + "callback=" + name + "&u=" + encodeURIComponent(url);
+    document.body.appendChild(sc);
   }
 
   /* ---------- Settings: the address (kept by the Home Screen icon), then saved, then CONFIG ---------- */
@@ -377,6 +407,7 @@ button { font-family: inherit; -webkit-appearance: none; }
     return null;
   }
   var cfg = {
+    relay: pick("rl") || SV.relay || CONFIG.relay,
     leagues: pick("lg", true) || SV.leagues || CONFIG.leagues,
     favorites: CONFIG.favorites,
     tickers: pick("tk", true) || SV.tickers || CONFIG.tickers,
@@ -760,7 +791,7 @@ button { font-family: inherit; -webkit-appearance: none; }
     if (!moved) { secIdx = 0; pageIdx = 0; }
     renderSpot();
     drawPage();
-    $("scoreFoot").textContent = scoreErr ? "Couldn’t reach ESPN. Trying again in a minute." : "";
+    $("scoreFoot").textContent = scoreErr ? (cfg.relay ? "Couldn’t reach ESPN through the relay. Trying again in a minute." : "Couldn’t reach ESPN. Older iPads need the relay (see README).") : "";
   }
   function drawPage() {
     var list = $("list");
@@ -1187,6 +1218,7 @@ button { font-family: inherit; -webkit-appearance: none; }
     pendingPlace = null;
     $("curPlace").textContent = "Now showing: " + cfg.place.name;
     $("inCity").value = ""; clear($("cityRes"));
+    $("inRelay").value = cfg.relay;
     $("inFh").value = cfg.finnhubKey; $("inTd").value = cfg.twelveDataKey;
     $("inTk").value = cfg.tickers.join(", ");
     $("inNs").value = cfg.nightStart; $("inNe").value = cfg.nightEnd;
@@ -1208,6 +1240,7 @@ button { font-family: inherit; -webkit-appearance: none; }
     for (var i = 0; i < boxes.length; i++) if (boxes[i].checked) lg.push(boxes[i].value);
     var tk = trim($("inTk").value).toUpperCase().split(/[\s,]+/).filter(function (x) { return x; });
     var s = {
+      relay: trim($("inRelay").value),
       finnhubKey: trim($("inFh").value), twelveDataKey: trim($("inTd").value),
       tickers: tk.length ? tk : CONFIG.tickers, leagues: lg,
       nightStart: $("inNs").value || "22:00", nightEnd: $("inNe").value || "06:30",
@@ -1215,7 +1248,7 @@ button { font-family: inherit; -webkit-appearance: none; }
     };
     store(s);
     // Put the settings in the address so Add to Home Screen keeps them.
-    var q = "?fh=" + encodeURIComponent(s.finnhubKey) + "&td=" + encodeURIComponent(s.twelveDataKey) +
+    var q = "?" + (s.relay && s.relay !== CONFIG.relay ? "rl=" + encodeURIComponent(s.relay) + "&" : "") + "fh=" + encodeURIComponent(s.finnhubKey) + "&td=" + encodeURIComponent(s.twelveDataKey) +
       "&tk=" + encodeURIComponent(s.tickers.join(",")) + "&lg=" + encodeURIComponent(s.leagues.join(",")) +
       "&ns=" + encodeURIComponent(s.nightStart) + "&ne=" + encodeURIComponent(s.nightEnd) +
       "&pl=" + encodeURIComponent(s.place.name) + "&plat=" + s.place.lat + "&plon=" + s.place.lon;

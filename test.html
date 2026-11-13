@@ -31,6 +31,11 @@ button { margin-top: 20px; font-size: 18px; padding: 12px 20px; border-radius: 1
   var errors = [];
   window.onerror = function (msg, src, line) { errors.push(msg + " (line " + line + ")"); showInfo(); };
 
+  // To test your relay, add ?relay=YOUR-RELAY-ADDRESS to this page's address, or paste it here.
+  var RELAY = "";
+  var m = /[?&]relay=([^&]+)/.exec(location.search);
+  if (m) RELAY = decodeURIComponent(m[1]);
+
   var TESTS = [
     ["This website (control)", "index.html?test=" + Date.now(), "text"],
     ["ESPN scores", "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard", "json"],
@@ -70,6 +75,22 @@ button { margin-top: 20px; font-size: 18px; padding: 12px 20px; border-radius: 1
     }
   }
 
+  var cbN = 0;
+  function testRelay(name, url, out) {
+    var started = Date.now(), done = false, cb = "tr" + (++cbN) + "_" + Date.now();
+    out.className = "res wait"; out.textContent = "Testing…";
+    function finish(cls, text) { if (done) return; done = true; out.className = "res " + cls; out.textContent = text + " (" + ((Date.now() - started) / 1000).toFixed(1) + " s)"; }
+    var sc = document.createElement("script");
+    window[cb] = function (r) {
+      if (r && r.status >= 200 && r.status < 300) finish("ok", "Working through the relay: status " + r.status);
+      else finish("bad", "Relay answered, but the service returned " + (r && (r.status || r.error)));
+    };
+    sc.onerror = function () { finish("bad", "Couldn’t load the relay (check its address and that it’s deployed for Anyone)"); };
+    setTimeout(function () { finish("bad", "Relay timed out"); }, 30000);
+    sc.src = RELAY + (RELAY.indexOf("?") < 0 ? "?" : "&") + "callback=" + cb + "&u=" + encodeURIComponent(url);
+    document.body.appendChild(sc);
+  }
+
   function run() {
     var box = $("tests");
     while (box.firstChild) box.removeChild(box.firstChild);
@@ -79,6 +100,14 @@ button { margin-top: 20px; font-size: 18px; padding: 12px 20px; border-radius: 1
       row.appendChild(res);
       box.appendChild(row);
       test(TESTS[i], res);
+    }
+    if (RELAY) {
+      var rt = [["ESPN through the relay", TESTS[1][1]], ["Weather through the relay", TESTS[3][1]]];
+      for (var j = 0; j < rt.length; j++) {
+        var r2 = el("div", "row"), o2 = el("div", "res");
+        r2.appendChild(el("div", "name", rt[j][0])); r2.appendChild(o2); box.appendChild(r2);
+        testRelay(rt[j][0], rt[j][1], o2);
+      }
     }
     showInfo();
   }
